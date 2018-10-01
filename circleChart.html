@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="pl">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Circle Chart</title>
+    </head>
+
+    <body>
+
+        <div id="playD3"></div>
+
+        <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+        <script>
+            const width = 400;
+            const height = 400;
+            const data = [23, 17, 43, 21];
+            const colors = ["#c6c3ab", "#526044", "#ded8cf", "#758063"];
+
+            const svg =  d3
+                .select("body")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            const g = svg.selectAll("g")
+                .data(data)
+                .enter()
+                .append("g")
+                .attr("transform", (d, i) => `translate(0, 0)`);
+
+            g.append("circle")
+                .attr("cx", (d, i) => i * 75 + 50)
+                .attr("cy", (d, i) => 75)
+                .attr("r", d => d * 1.5)
+                .attr("fill", (d, i) => colors[i]);
+
+            g.append("text")
+                .attr("x", (d, i) => i * 75 + 40)
+                .attr("y", 80)
+                .attr("stroke", "black")
+                .attr("stroke-width", ".25px")
+                .attr("font-family", "arial")
+                .attr("font-size", "14px")
+                .text(d => d);
+        </script>
+    </body>
+
+</html>
