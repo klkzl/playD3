@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="pl">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Static Graph</title>
+    </head>
+
+    <body>
+
+        <div id="playD3"></div>
+
+        <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+        <script>
+            const dataset = [
+                { year: 2006, population: 40 },
+                { year: 2008, population: 15 },
+                { year: 2010, population: 32 },
+                { year: 2012, population: 42 },
+                { year: 2014, population: 3 },
+                { year: 2016, population: 17 },
+                { year: 2017, population: 62 },
+            ];
+
+            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+            const width = 960 - margin.left - margin.right;
+            const height = 500 - margin.top - margin.bottom;
+
+            const x = d3.scaleTime().range([0, width]);
+            const y = d3.scaleLinear().range([height, 0]);
+
+            const valueline = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d.population));
+
+            const svg = d3.select("body")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform", `translate( ${margin.left}, ${margin.top})`);
+
+            x.domain(d3.extent(dataset, d => d.year));
+            y.domain([0, d3.max(dataset, d => d.population)]);
+
+            svg.append("path")
+                .data([dataset])
+                .attr("class", "line")
+                .attr("d", valueline)
+                .attr("fill", "none")
+                .attr("stroke", "#98b6c1")
+                .attr("stroke-width", "3px");
+
+            svg.append("g")
+                .attr("transform", `translate(0, ${height})`)
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+        </script>
+    </body>
+
+</html>
