@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html lang="pl">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Bubble Chart</title>
+    </head>
+
+    <body>
+
+        <div id="playD3"></div>
+
+        <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+        <script>
+
+            const dataset = {
+                children:
+                [
+                    { name: "Olives", count: 4319 },
+                    { name: "Tea", count: 4159 },
+                    { name: "Mashed Potatoes", count: 2583 },
+                    { name: "Boiled Potatoes", count: 2074 },
+                    { name: "Milk", count: 1894 },
+                    { name: "Chicken Salad", count: 1809 },
+                    { name: "Vanilla Ice Cream", count: 1713 },
+                    { name: "Cocoa", count: 1636 },
+                    { name: "Lettuce Salad", count: 1566 },
+                    { name: "Lobster Salad", count: 1511 },
+                    { name: "Chocolate", count: 1489 },
+                    { name: "Apple Pie", count: 1487 },
+                    { name: "Orange Juice", count: 1423 },
+                    { name: "American Cheese", count: 1372 },
+                    { name: "Green Peas", count: 1341 },
+                    { name: "Assorted Cakes", count: 1331 },
+                    { name: "French Fried Potatoes", count: 1328 },
+                    { name: "Potato Salad", count: 1306 },
+                    { name: "Baked Potatoes", count: 1293 },
+                    { name: "Roquefort", count: 1273 },
+                    { name: "Stewed Prunes", count: 1268 }
+                ]
+            };
+
+            const diameter = 600;
+            const myColors = ['#b9c6bf', '#a09f95', '#dcdad0', '#849f97', '#6d6755']
+            const color = d3.scaleOrdinal(d3.schemeCategory20c);
+
+            const bubble = d3.pack(dataset)
+                .size([diameter, diameter])
+                .padding(1.5);
+
+            const svg = d3.select("body")
+                .append("svg")
+                .attr("width", diameter)
+                .attr("height", diameter)
+                .attr("class", "bubble");
+
+            const nodes = d3.hierarchy(dataset)
+                .sum(d => d.count);
+
+            const node = svg.selectAll(".node")
+                .data(bubble(nodes).descendants())
+                .enter()
+                .filter(d => !d.children)
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate( ${d.x}, ${d.y})`);
+
+            node.append("title")
+                .text(d => `${d.name}: ${d.count}`);
+
+            node.append("circle")
+                .attr("r", d => d.r)
+                .style("fill", (d,i) => myColors[Math.floor(Math.random() * 5 )]);
+
+            node.append("text")
+                .attr("dy", ".2em")
+                .style("text-anchor", "middle")
+                .text(d => d.data.name.substring(0, d.r / 3))
+                .attr("font-family", "sans-serif")
+                .attr("font-size", d => d.r/5)
+                .attr("fill", "white");
+
+            node.append("text")
+                .attr("dy", "1.3em")
+                .style("text-anchor", "middle")
+                .text(d => d.data.count)
+                .attr("font-family",  "Gill Sans", "Gill Sans MT")
+                .attr("font-size", d => d.r/5)
+                .attr("fill", "white");
+
+            d3.select(self.frameElement)
+                .style("height", `${diameter}px`);
+        </script>
+    </body>
+
+</html>
